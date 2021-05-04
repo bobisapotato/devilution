@@ -3070,7 +3070,7 @@ void AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, i
 	missile[mi]._miVar2 = sy;
 	missile[mi]._miVar4 = dx;
 	missile[mi]._miVar5 = dy;
-	if ((monster[id]._mx != 1 || monster[id]._my) && id == myplr)
+	if ((monster[id]._mx != 1 || monster[id]._my != 0) && id == myplr)
 		M_StartKill(id, id);
 	UseMana(id, SPL_GOLEM);
 }
@@ -3690,7 +3690,7 @@ void MI_Golem(int i)
 	char *ct;
 
 	src = missile[i]._misource;
-	if (monster[src]._mx == 1 && !monster[src]._my) {
+	if (monster[src]._mx == 1 && monster[src]._my == 0) {
 		for (l = 0; l < 6; l++) {
 			k = CrawlNum[l];
 			tid = k + 2;
@@ -5413,6 +5413,7 @@ void MI_Apoca(int i)
 	exit = FALSE;
 	for (j = missile[i]._miVar2; j < missile[i]._miVar3 && !exit; j++) {
 		for (k = missile[i]._miVar4; k < missile[i]._miVar5 && !exit; k++) {
+			// BUGFIX: was `dMonster[k][j] > MAX_PLRS-1`, should be `dMonster[k][j]-1 >= MAX_PLRS`.
 			if (dMonster[k][j] > MAX_PLRS - 1 && !nSolidTable[dPiece[k][j]]) {
 #ifdef HELLFIRE
 				if (LineClear(missile[i]._mix, missile[i]._miy, k, j)) {
